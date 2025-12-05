@@ -89,6 +89,11 @@ const allSearchEngines = {
         name: 'Wikipedia',
         url: 'https://en.wikipedia.org/wiki/Special:Search?search=',
         icon: '<i class="fa-brands fa-wikipedia-w"></i>'
+    },
+    archive: {
+        name: 'Internet Archive',
+        url: 'https://archive.org/search?query=',
+        icon: '<i class="fa-solid fa-box-archive"></i>'
     }
 };
 
