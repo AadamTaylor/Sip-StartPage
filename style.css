@@ -1067,7 +1067,7 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-lg);
     width: 100%;
-    max-width: 800px;
+    max-width: 950px;
     height: 600px;
     max-height: 85vh;
     margin: var(--spacing-lg);
@@ -2534,9 +2534,26 @@ kbd {
 }
 
 /* Drag and Drop Styles */
+.drag-handle {
+    cursor: grab;
+    color: var(--subtext0);
+    opacity: 0.5;
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s ease;
+}
+
+.drag-handle:hover {
+    opacity: 1;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
 .category-item,
 .link-item {
-    cursor: move;
     transition: all 0.2s ease;
 }
 

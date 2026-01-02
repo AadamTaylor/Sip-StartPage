@@ -1217,7 +1217,8 @@ function renderCategoriesSettings() {
     if (!container) return;
     
     container.innerHTML = categories.map((category, index) => `
-        <div class="category-item" data-id="${category.id}" draggable="true">
+        <div class="category-item" data-id="${category.id}">
+            <span class="drag-handle" draggable="true" title="Drag to reorder"><i class="fa-solid fa-grip-vertical"></i></span>
             <span class="icon-preview"><i class="${category.icon}"></i></span>
             <input type="text" class="icon-input" value="${category.icon}" placeholder="fa-solid fa-folder" data-field="icon">
             <input type="text" value="${category.name}" placeholder="Category Name" maxlength="20" data-field="name">
@@ -1235,12 +1236,16 @@ function renderCategoriesSettings() {
     container.querySelectorAll('.category-item').forEach(item => {
         const categoryId = item.dataset.id;
         const iconPreview = item.querySelector('.icon-preview i');
+        const dragHandle = item.querySelector('.drag-handle');
         
-        // Drag and drop events
-        item.addEventListener('dragstart', handleCategoryDragStart);
+        // Drag and drop events on handle only
+        if (dragHandle) {
+            dragHandle.addEventListener('dragstart', handleCategoryDragStart);
+            dragHandle.addEventListener('dragend', handleCategoryDragEnd);
+        }
+        
         item.addEventListener('dragover', handleCategoryDragOver);
         item.addEventListener('drop', handleCategoryDrop);
-        item.addEventListener('dragend', handleCategoryDragEnd);
         item.addEventListener('dragleave', handleCategoryDragLeave);
         
         item.querySelectorAll('input').forEach(input => {
@@ -1409,7 +1414,8 @@ function renderLinksForCategory(categoryId) {
     const categoryLinks = links[categoryId] || [];
     
     container.innerHTML = categoryLinks.map((link, index) => `
-        <div class="link-item" data-index="${index}" draggable="true">
+        <div class="link-item" data-index="${index}">
+            <span class="drag-handle" draggable="true" title="Drag to reorder"><i class="fa-solid fa-grip-vertical"></i></span>
             <span class="icon-preview"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
             <input type="text" class="icon-input" value="${link.icon || 'fa-solid fa-link'}" placeholder="fa-solid fa-link" data-field="icon">
             <input type="text" value="${link.name}" placeholder="Link Name" maxlength="20" data-field="name">
@@ -1428,12 +1434,16 @@ function renderLinksForCategory(categoryId) {
     container.querySelectorAll('.link-item').forEach(item => {
         const index = parseInt(item.dataset.index);
         const iconPreview = item.querySelector('.icon-preview i');
+        const dragHandle = item.querySelector('.drag-handle');
         
-        // Drag and drop events
-        item.addEventListener('dragstart', (e) => handleLinkDragStart(e, categoryId));
+        // Drag and drop events on handle only
+        if (dragHandle) {
+            dragHandle.addEventListener('dragstart', (e) => handleLinkDragStart(e, categoryId));
+            dragHandle.addEventListener('dragend', handleLinkDragEnd);
+        }
+        
         item.addEventListener('dragover', handleLinkDragOver);
         item.addEventListener('drop', (e) => handleLinkDrop(e, categoryId));
-        item.addEventListener('dragend', handleLinkDragEnd);
         item.addEventListener('dragleave', handleLinkDragLeave);
         
         item.querySelectorAll('input').forEach(input => {
