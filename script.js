@@ -859,6 +859,19 @@ function createHeaderWidget(type, position) {
         setTimeout(() => {
             timeElement = document.getElementById('time');
             dateElement = document.getElementById('date');
+            
+            // Add click handler to toggle time format
+            if (timeElement) {
+                timeElement.style.cursor = 'pointer';
+                timeElement.title = 'Click to toggle time format';
+                timeElement.addEventListener('click', () => {
+                    const newFormat = settings.timeFormat === '12' ? '24' : '12';
+                    saveSettings('timeFormat', newFormat);
+                    updateDateTime();
+                    updateToggleStates();
+                });
+            }
+            
             updateDateTime();
         }, 0);
         return widget;
