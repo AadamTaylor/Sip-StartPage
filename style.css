@@ -852,6 +852,12 @@
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
+/* Custom color scheme - colors set dynamically via JavaScript */
+[data-scheme="custom"] {
+    /* Colors will be set via inline styles by applyCustomColors() */
+    /* This ensures the selector exists and takes precedence */
+}
+
 /* Reset & Base */
 *, *::before, *::after {
     margin: 0;
@@ -2063,8 +2069,12 @@ body {
     color: var(--accent);
 }
 
+.widget-icon i {
+    color: inherit;
+}
+
 .widget-icon img {
-    filter: brightness(0) saturate(100%) invert(79%) sepia(14%) saturate(1076%) hue-rotate(128deg) brightness(95%) contrast(92%);
+    /* Removed hardcoded filter - respects theme colors */
 }
 
 .widget-text {

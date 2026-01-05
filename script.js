@@ -259,46 +259,159 @@ function applyCustomColors() {
     const customColors = settings.customColors || {};
     const root = document.documentElement;
     
-    if (customColors.primary) root.style.setProperty('--primary', customColors.primary);
-    if (customColors.secondary) root.style.setProperty('--secondary', customColors.secondary);
-    if (customColors.accent) root.style.setProperty('--accent', customColors.accent);
+    // Apply primary colors
+    if (customColors.primary) {
+        root.style.setProperty('--primary', customColors.primary);
+        root.style.setProperty('--mauve', customColors.primary);
+    }
+    if (customColors.secondary) {
+        root.style.setProperty('--secondary', customColors.secondary);
+        root.style.setProperty('--blue', customColors.secondary);
+    }
+    if (customColors.accent) {
+        root.style.setProperty('--accent', customColors.accent);
+        root.style.setProperty('--teal', customColors.accent);
+    }
+    
+    // Apply background colors
     if (customColors.background) {
         root.style.setProperty('--base', customColors.background);
         root.style.setProperty('--crust', customColors.background);
     }
+    
+    // Apply surface colors
     if (customColors.surface) {
         root.style.setProperty('--surface0', customColors.surface);
         root.style.setProperty('--surface1', customColors.surface);
         root.style.setProperty('--mantle', customColors.surface);
+        root.style.setProperty('--surface2', customColors.surface);
     }
+    
+    // Apply text colors
     if (customColors.text) {
         root.style.setProperty('--text', customColors.text);
         root.style.setProperty('--subtext0', customColors.text);
+        root.style.setProperty('--subtext1', customColors.text);
+        // Set overlay colors to slightly dimmed text color for tabs and other UI elements
+        const textColor = customColors.text;
+        // Calculate a dimmed version (increase opacity or lighten/darken)
+        root.style.setProperty('--overlay0', textColor + 'cc'); // 80% opacity
+        root.style.setProperty('--overlay1', textColor + '99'); // 60% opacity
+        root.style.setProperty('--overlay2', textColor + '66'); // 40% opacity
+    }
+    
+    // Set other accent colors to match primary/secondary for consistency
+    if (customColors.primary) {
+        root.style.setProperty('--pink', customColors.primary);
+        root.style.setProperty('--flamingo', customColors.primary);
+        root.style.setProperty('--rosewater', customColors.primary);
+    }
+    if (customColors.accent) {
+        root.style.setProperty('--green', customColors.accent);
+        root.style.setProperty('--sky', customColors.accent);
+        root.style.setProperty('--sapphire', customColors.accent);
+    }
+    if (customColors.secondary) {
+        root.style.setProperty('--lavender', customColors.secondary);
+    }
+    
+    // Set gradients using custom colors
+    if (customColors.primary && customColors.secondary) {
+        root.style.setProperty('--gradient-primary', `linear-gradient(135deg, ${customColors.primary} 0%, ${customColors.secondary} 100%)`);
+    }
+    if (customColors.accent && customColors.secondary) {
+        root.style.setProperty('--gradient-accent', `linear-gradient(135deg, ${customColors.accent} 0%, ${customColors.secondary} 100%)`);
+    }
+    
+    // Set glass effects with custom background
+    if (customColors.background) {
+        // Parse background color to create glass effect
+        const bg = customColors.background;
+        // Extract RGB values if hex
+        if (bg.startsWith('#')) {
+            const r = parseInt(bg.slice(1, 3), 16);
+            const g = parseInt(bg.slice(3, 5), 16);
+            const b = parseInt(bg.slice(5, 7), 16);
+            root.style.setProperty('--glass-bg', `rgba(${r}, ${g}, ${b}, 0.6)`);
+        }
     }
 }
 
 function clearCustomColors() {
     const root = document.documentElement;
+    
+    // Remove semantic colors
     root.style.removeProperty('--primary');
     root.style.removeProperty('--secondary');
     root.style.removeProperty('--accent');
+    
+    // Remove base colors
     root.style.removeProperty('--base');
     root.style.removeProperty('--crust');
+    
+    // Remove surface colors
     root.style.removeProperty('--surface0');
     root.style.removeProperty('--surface1');
+    root.style.removeProperty('--surface2');
     root.style.removeProperty('--mantle');
+    
+    // Remove text colors
     root.style.removeProperty('--text');
     root.style.removeProperty('--subtext0');
+    root.style.removeProperty('--subtext1');
+    
+    // Remove overlay colors
+    root.style.removeProperty('--overlay0');
+    root.style.removeProperty('--overlay1');
+    root.style.removeProperty('--overlay2');
+    
+    // Remove accent color variations
+    root.style.removeProperty('--mauve');
+    root.style.removeProperty('--blue');
+    root.style.removeProperty('--teal');
+    root.style.removeProperty('--pink');
+    root.style.removeProperty('--flamingo');
+    root.style.removeProperty('--rosewater');
+    root.style.removeProperty('--green');
+    root.style.removeProperty('--sky');
+    root.style.removeProperty('--sapphire');
+    root.style.removeProperty('--lavender');
+    
+    // Remove gradients
+    root.style.removeProperty('--gradient-primary');
+    root.style.removeProperty('--gradient-accent');
+    
+    // Remove glass effects
+    root.style.removeProperty('--glass-bg');
 }
 
 function updateColorModeVisibility() {
     const colorModeItem = document.querySelector('[data-setting="colorMode"]')?.closest('.setting-item');
+    const themeItem = document.querySelector('[data-setting="theme"]')?.closest('.setting-item');
+    
     if (colorModeItem) {
-        // Hide color mode option for monochrome scheme
+        // Hide color mode option for monochrome scheme or disable for custom
         if (settings.colorScheme === 'monochrome') {
             colorModeItem.style.display = 'none';
+        } else if (settings.colorScheme === 'custom') {
+            colorModeItem.style.display = 'flex';
+            colorModeItem.style.opacity = '0.5';
+            colorModeItem.style.pointerEvents = 'none';
         } else {
             colorModeItem.style.display = 'flex';
+            colorModeItem.style.opacity = '1';
+            colorModeItem.style.pointerEvents = 'auto';
+        }
+    }
+    
+    if (themeItem) {
+        // Disable mode toggle for custom scheme
+        if (settings.colorScheme === 'custom') {
+            themeItem.style.opacity = '0.5';
+            themeItem.style.pointerEvents = 'none';
+        } else {
+            themeItem.style.opacity = '1';
+            themeItem.style.pointerEvents = 'auto';
         }
     }
 }
@@ -312,6 +425,11 @@ function applyColorMode(mode) {
 // Apply saved theme and color scheme immediately
 applyTheme(settings.theme);
 applyColorScheme(settings.colorScheme);
+
+// If custom scheme is active, apply custom colors
+if (settings.colorScheme === 'custom') {
+    applyCustomColors();
+}
 
 // ========================================
 // Background Image Management
